@@ -4,7 +4,7 @@ from datetime import datetime
 
 import pytest
 
-from app.services.event_logger import EventLogger, SQLiteEventLogger
+from app.services.event_logger import SQLiteEventLogger
 
 
 class TestSQLiteEventLogger:

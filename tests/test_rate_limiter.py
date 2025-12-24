@@ -3,7 +3,6 @@
 import os
 import tempfile
 
-import pytest
 from fastapi.testclient import TestClient
 
 # Set test environment variables before importing app
@@ -92,7 +91,6 @@ class TestRateLimiterConfig:
         """Test client identifier extraction without X-Forwarded-For header."""
         from unittest.mock import MagicMock
         from app.rate_limiter import get_client_identifier
-        from slowapi.util import get_remote_address
 
         request = MagicMock()
         request.headers = {}

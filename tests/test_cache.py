@@ -1,11 +1,6 @@
 """Unit tests for the CacheService."""
-
-import asyncio
-from datetime import datetime, timedelta
-
 import pytest
 
-from app.models.weather import WeatherData
 from app.services.cache import CacheEntry, CacheService
 
 

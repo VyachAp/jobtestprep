@@ -4,7 +4,6 @@ This module provides a local file storage implementation that can be
 easily swapped for S3 or other cloud storage solutions.
 """
 
-import json
 from abc import ABC, abstractmethod
 from datetime import datetime
 from pathlib import Path

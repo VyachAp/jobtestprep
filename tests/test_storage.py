@@ -5,8 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from app.models.weather import WeatherData
-from app.services.storage import LocalFileStorage, StorageService
+from app.services.storage import LocalFileStorage
 
 
 class TestLocalFileStorage:

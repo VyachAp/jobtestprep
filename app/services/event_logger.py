@@ -3,8 +3,6 @@
 This module provides a SQLite-based logging implementation that can be
 easily swapped for DynamoDB or other database solutions.
 """
-
-import json
 from abc import ABC, abstractmethod
 from datetime import datetime
 from pathlib import Path

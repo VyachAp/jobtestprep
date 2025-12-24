@@ -1,0 +1,25 @@
+# Virtual environment
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Data and logs (will be mounted as volumes)
+data/
+logs/
+
+# Development files
+*.md
+env.example
+.env
+

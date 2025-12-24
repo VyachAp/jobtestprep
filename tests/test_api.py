@@ -83,69 +83,69 @@ class TestEventsEndpoint:
 class TestWeatherEndpoint:
     """Tests for the /weather endpoint."""
 
-    def test_get_weather_success(self, sample_weather_api_response):
+    @respx.mock(assert_all_mocked=False)
+    def test_get_weather_success(self, sample_weather_api_response, respx_mock):
         """Test successful weather data retrieval."""
-        with respx.mock(assert_all_mocked=False) as respx_mock:
-            respx_mock.get("https://api.openweathermap.org/data/2.5/weather").mock(
-                return_value=Response(200, json=sample_weather_api_response)
-            )
-            
-            client = TestClient(app)
-            response = client.get("/weather?city=London")
-            
-            assert response.status_code == 200
-            data = response.json()
-            assert data["data"]["city"] == "London"
-            assert data["cached"] is False
-            assert "file_path" in data
+        respx_mock.get("https://api.openweathermap.org/data/2.5/weather").mock(
+            return_value=Response(200, json=sample_weather_api_response)
+        )
+        
+        client = TestClient(app)
+        response = client.get("/weather?city=London")
+        
+        assert response.status_code == 200
+        data = response.json()
+        assert data["data"]["city"] == "London"
+        assert data["cached"] is False
+        assert "file_path" in data
 
-    def test_get_weather_caching(self, sample_weather_api_response):
+    @respx.mock(assert_all_mocked=False)
+    def test_get_weather_caching(self, sample_weather_api_response, respx_mock):
         """Test weather data is cached on second request."""
-        with respx.mock(assert_all_mocked=False) as respx_mock:
-            respx_mock.get("https://api.openweathermap.org/data/2.5/weather").mock(
-                return_value=Response(200, json=sample_weather_api_response)
-            )
-            
-            client = TestClient(app)
-            
-            # First request - not cached
-            response1 = client.get("/weather?city=London")
-            assert response1.status_code == 200
-            assert response1.json()["cached"] is False
-            
-            # Second request - should be cached
-            response2 = client.get("/weather?city=London")
-            assert response2.status_code == 200
-            assert response2.json()["cached"] is True
+        respx_mock.get("https://api.openweathermap.org/data/2.5/weather").mock(
+            return_value=Response(200, json=sample_weather_api_response)
+        )
+        
+        client = TestClient(app)
+        
+        # First request - not cached
+        response1 = client.get("/weather?city=London")
+        assert response1.status_code == 200
+        assert response1.json()["cached"] is False
+        
+        # Second request - should be cached
+        response2 = client.get("/weather?city=London")
+        assert response2.status_code == 200
+        assert response2.json()["cached"] is True
 
-    def test_get_weather_city_not_found(self):
+    @respx.mock(assert_all_mocked=False)
+    def test_get_weather_city_not_found(self, respx_mock):
         """Test 404 when city is not found."""
-        with respx.mock(assert_all_mocked=False) as respx_mock:
-            respx_mock.get("https://api.openweathermap.org/data/2.5/weather").mock(
-                return_value=Response(404, json={"cod": "404", "message": "city not found"})
-            )
-            
-            client = TestClient(app)
-            response = client.get("/weather?city=NonexistentCity12345")
-            
-            assert response.status_code == 404
-            data = response.json()
-            assert "error" in data
-            assert data["type"] == "CityNotFoundError"
+        respx_mock.get("https://api.openweathermap.org/data/2.5/weather").mock(
+            return_value=Response(404, json={"cod": "404", "message": "city not found"})
+        )
+        
+        client = TestClient(app)
+        response = client.get("/weather?city=NonexistentCity12345")
+        
+        assert response.status_code == 404
+        data = response.json()
+        assert "error" in data
+        assert data["type"] == "CityNotFoundError"
 
-    def test_get_weather_invalid_api_key(self):
+    @respx.mock(assert_all_mocked=False)
+    def test_get_weather_invalid_api_key(self, respx_mock):
         """Test 401 when API key is invalid."""
-        with respx.mock(assert_all_mocked=False) as respx_mock:
-            respx_mock.get("https://api.openweathermap.org/data/2.5/weather").mock(
-                return_value=Response(401, json={"cod": 401, "message": "Invalid API key"})
-            )
-            
-            client = TestClient(app)
-            response = client.get("/weather?city=London")
-            
-            assert response.status_code == 401
-            data = response.json()
-            assert data["type"] == "APIKeyError"
+        respx_mock.get("https://api.openweathermap.org/data/2.5/weather").mock(
+            return_value=Response(401, json={"cod": 401, "message": "Invalid API key"})
+        )
+        
+        client = TestClient(app)
+        response = client.get("/weather?city=London")
+        
+        assert response.status_code == 401
+        data = response.json()
+        assert data["type"] == "APIKeyError"
 
     def test_get_weather_missing_city_param(self):
         """Test validation error when city parameter is missing."""
@@ -172,24 +172,24 @@ class TestWeatherEndpoint:
         
         assert response.status_code == 422
 
-    def test_get_weather_case_insensitive_cache(self, sample_weather_api_response):
+    @respx.mock(assert_all_mocked=False)
+    def test_get_weather_case_insensitive_cache(self, sample_weather_api_response, respx_mock):
         """Test cache is case-insensitive for city names."""
-        with respx.mock(assert_all_mocked=False) as respx_mock:
-            respx_mock.get("https://api.openweathermap.org/data/2.5/weather").mock(
-                return_value=Response(200, json=sample_weather_api_response)
-            )
-            
-            client = TestClient(app)
-            
-            # First request with lowercase
-            response1 = client.get("/weather?city=london")
-            assert response1.status_code == 200
-            assert response1.json()["cached"] is False
-            
-            # Second request with uppercase - should hit cache
-            response2 = client.get("/weather?city=LONDON")
-            assert response2.status_code == 200
-            assert response2.json()["cached"] is True
+        respx_mock.get("https://api.openweathermap.org/data/2.5/weather").mock(
+            return_value=Response(200, json=sample_weather_api_response)
+        )
+        
+        client = TestClient(app)
+        
+        # First request with lowercase
+        response1 = client.get("/weather?city=london")
+        assert response1.status_code == 200
+        assert response1.json()["cached"] is False
+        
+        # Second request with uppercase - should hit cache
+        response2 = client.get("/weather?city=LONDON")
+        assert response2.status_code == 200
+        assert response2.json()["cached"] is True
 
 
 class TestAsyncWeatherEndpoint:

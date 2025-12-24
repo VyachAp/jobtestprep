@@ -38,4 +38,3 @@ settings = Settings()
 # Ensure directories exist
 settings.data_dir.mkdir(parents=True, exist_ok=True)
 settings.logs_dir.mkdir(parents=True, exist_ok=True)
-

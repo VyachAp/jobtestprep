@@ -60,4 +60,3 @@ def get_event_logger() -> EventLogger:
 def get_weather_service() -> WeatherService | None:
     """Dependency for weather service."""
     return services.weather
-

@@ -102,13 +102,10 @@ class CacheService:
     def get_stats(self) -> dict:
         """Get cache statistics."""
         now = datetime.utcnow()
-        active_entries = {
-            k: v for k, v in self._cache.items() if not v.is_expired()
-        }
+        active_entries = {k: v for k, v in self._cache.items() if not v.is_expired()}
 
         return {
             "total_entries": len(self._cache),
             "active_entries": len(active_entries),
             "ttl_seconds": self._ttl_seconds,
         }
-

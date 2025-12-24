@@ -6,4 +6,3 @@ from app.services.storage import StorageService
 from app.services.weather import WeatherService
 
 __all__ = ["CacheService", "EventLogger", "StorageService", "WeatherService"]
-

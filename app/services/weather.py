@@ -144,4 +144,3 @@ class WeatherService:
             icon=weather.get("icon", ""),
             timestamp=datetime.utcnow(),
         )
-

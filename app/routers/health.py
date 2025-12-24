@@ -42,4 +42,3 @@ async def get_events(
 
     events = await event_logger.get_request_history(city=city, limit=limit)
     return {"events": events, "count": len(events)}
-

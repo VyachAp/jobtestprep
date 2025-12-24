@@ -24,6 +24,7 @@ class WeatherResponse(BaseModel):
     """API response wrapper for weather data."""
 
     data: WeatherData
-    cached: bool = Field(default=False, description="Whether data was served from cache")
+    cached: bool = Field(
+        default=False, description="Whether data was served from cache"
+    )
     file_path: str | None = Field(default=None, description="Storage path for the data")
-

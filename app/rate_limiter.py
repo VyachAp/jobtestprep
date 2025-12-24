@@ -12,7 +12,7 @@ from app.config import settings
 
 def get_client_identifier(request) -> str:
     """Extract client identifier from request.
-    
+
     Uses X-Forwarded-For header if present (for proxied requests),
     otherwise falls back to remote address.
     """
@@ -30,4 +30,3 @@ limiter = Limiter(
     storage_uri=settings.rate_limit_storage_uri,
     strategy="fixed-window",
 )
-

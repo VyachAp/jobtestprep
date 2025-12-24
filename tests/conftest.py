@@ -130,4 +130,3 @@ async def async_client():
         base_url="http://test",
     ) as client:
         yield client
-

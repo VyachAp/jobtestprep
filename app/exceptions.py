@@ -6,7 +6,9 @@ from fastapi.responses import JSONResponse
 from app.services.weather import APIKeyError, CityNotFoundError, WeatherAPIError
 
 
-async def weather_api_error_handler(request: Request, exc: WeatherAPIError) -> JSONResponse:
+async def weather_api_error_handler(
+    request: Request, exc: WeatherAPIError
+) -> JSONResponse:
     """Handle WeatherAPIError exceptions."""
     return JSONResponse(
         status_code=exc.status_code or 500,
@@ -17,7 +19,9 @@ async def weather_api_error_handler(request: Request, exc: WeatherAPIError) -> J
     )
 
 
-async def city_not_found_handler(request: Request, exc: CityNotFoundError) -> JSONResponse:
+async def city_not_found_handler(
+    request: Request, exc: CityNotFoundError
+) -> JSONResponse:
     """Handle CityNotFoundError exceptions."""
     return JSONResponse(
         status_code=404,
@@ -38,4 +42,3 @@ async def api_key_error_handler(request: Request, exc: APIKeyError) -> JSONRespo
             "type": "APIKeyError",
         },
     )
-

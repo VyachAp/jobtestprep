@@ -151,4 +151,3 @@ class EventLogger:
     ) -> list[dict]:
         """Get weather request history."""
         return await self._logger.get_events(city, limit)
-

@@ -95,4 +95,3 @@ class StorageService:
     async def load_weather_data(self, path: str) -> WeatherData | None:
         """Load weather data from the given path."""
         return await self._storage.load(path)
-

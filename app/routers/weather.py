@@ -85,4 +85,3 @@ async def get_weather(
     )
 
     return WeatherResponse(data=weather_data, cached=False, file_path=file_path)
-

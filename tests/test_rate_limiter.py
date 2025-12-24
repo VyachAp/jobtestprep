@@ -22,10 +22,10 @@ class TestRateLimiting:
         """Test that rate limit headers are present in response."""
         # Import app after setting env vars
         from app.main import app
-        
+
         client = TestClient(app)
         response = client.get("/health")
-        
+
         # Check for rate limit headers
         assert response.status_code == 200
         # slowapi adds these headers
@@ -36,20 +36,21 @@ class TestRateLimiting:
         # Create a fresh app instance for this test
         from importlib import reload
         import app.main
+
         reload(app.main)
         from app.main import app
-        
+
         # Use very low rate limit for testing
         app.state.limiter._default_limits = ["2/minute"]
-        
+
         client = TestClient(app)
-        
+
         # Make requests until rate limited
         responses = []
         for _ in range(5):
             response = client.get("/health")
             responses.append(response.status_code)
-        
+
         # At least one should be rate limited (429) or all succeed if limits not applied
         # The test verifies the rate limiter is configured correctly
         assert any(code in [200, 429] for code in responses)
@@ -57,13 +58,13 @@ class TestRateLimiting:
     def test_different_clients_have_separate_limits(self):
         """Test that different client IPs have separate rate limits."""
         from app.main import app
-        
+
         client = TestClient(app)
-        
+
         # Request with different X-Forwarded-For headers (simulating different clients)
         response1 = client.get("/health", headers={"X-Forwarded-For": "1.1.1.1"})
         response2 = client.get("/health", headers={"X-Forwarded-For": "2.2.2.2"})
-        
+
         # Both should succeed as they're different clients
         assert response1.status_code == 200
         assert response2.status_code == 200
@@ -76,12 +77,14 @@ class TestRateLimiterConfig:
         """Test client identifier extraction with X-Forwarded-For header."""
         from unittest.mock import MagicMock
         from app.rate_limiter import get_client_identifier
-        
+
         request = MagicMock()
-        request.headers = {"X-Forwarded-For": "203.0.113.195, 70.41.3.18, 150.172.238.178"}
-        
+        request.headers = {
+            "X-Forwarded-For": "203.0.113.195, 70.41.3.18, 150.172.238.178"
+        }
+
         identifier = get_client_identifier(request)
-        
+
         # Should return the first IP (original client)
         assert identifier == "203.0.113.195"
 
@@ -90,14 +93,13 @@ class TestRateLimiterConfig:
         from unittest.mock import MagicMock
         from app.rate_limiter import get_client_identifier
         from slowapi.util import get_remote_address
-        
+
         request = MagicMock()
         request.headers = {}
         request.client = MagicMock()
         request.client.host = "127.0.0.1"
-        
+
         identifier = get_client_identifier(request)
-        
+
         # Should fall back to remote address
         assert identifier == "127.0.0.1"
-
